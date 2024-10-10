@@ -25,7 +25,7 @@ const Home = () => {
         const apiResponse = await axios.get("https://realtime-rss-feed-server.onrender.com/rss-feed")
         setRssFeedData(apiResponse.data.data)
       } catch (error) {
-
+        console.error("Error to fetch Realtime RSS Feed", error)
       } finally {
         setIsFetchingRssData(false)
       }

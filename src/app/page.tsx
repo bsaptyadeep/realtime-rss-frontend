@@ -29,7 +29,7 @@ const Home = () => {
     const fetchRssFeed = async () => {
       setIsFetchingRssData(true)
       try {
-        const apiResponse = await axios.get("http://localhost:8000/rss-feed")
+        const apiResponse = await axios.get("https://realtime-rss-feed-server.onrender.com/rss-feed")
         if (rssFeedData.length !== 0) {
           setNotificationList((apiResponse.data.data as IRssFeed[]).filter((item) => {
             if (!rssFeedData.find((feed) => feed._id === item._id))

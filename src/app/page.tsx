@@ -21,8 +21,6 @@ const Home = () => {
   const [rssFeedData, setRssFeedData] = useState<IRssFeed[]>([]);
   const [rssFeedOfSelectedCategory, setRssFeedOfSelectedCategory] = useState<IRssFeed[]>([])
   const [isFetchingRssData, setIsFetchingRssData] = useState<boolean>(false);
-  const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
   const [notificationList, setNotificationList] = useState<IRssFeed[]>([])
 
   useEffect(() => {
@@ -39,18 +37,19 @@ const Home = () => {
         }
         setRssFeedData(apiResponse.data.data)
 
-        if (selectedCategory === "All") {
-          setRssFeedOfSelectedCategory((apiResponse.data.data as IRssFeed[]))
-        }
-        else {
-          setRssFeedOfSelectedCategory((apiResponse.data.data as IRssFeed[]).filter((feed) => feed.category === selectedCategory))
-        }
+        // if (selectedCategory === "All") {
+        //   setRssFeedOfSelectedCategory((apiResponse.data.data as IRssFeed[]))
+        // }
+        // else {
+        //   setRssFeedOfSelectedCategory((apiResponse.data.data as IRssFeed[]).filter((feed) => feed.category === selectedCategory))
+        // }
       } catch (error) {
         console.error("Error to fetch Realtime RSS Feed", error)
       } finally {
         setIsFetchingRssData(false)
       }
     }
+    fetchRssFeed()
     const interval = setInterval(() => {
       fetchRssFeed()
     }, 20000)
@@ -72,7 +71,7 @@ const Home = () => {
     }
 
     handleSelectCategory(selectedCategory)
-  }, [selectedCategory])
+  }, [selectedCategory, rssFeedData])
 
   console.log("testing~notificationList", notificationList)
 
@@ -86,7 +85,7 @@ const Home = () => {
         {
           notificationList.length > 0 &&
           notificationList.map((item) => (
-            <MacOSNotification title={item.title} message={item.description} />
+            <MacOSNotification key={`notification-${item._id}`} title={item.title} message={item.description} />
           ))
         }
         <h1 className="text-4xl font-extrabold text-gray-900 mb-8 text-center">
@@ -113,7 +112,8 @@ const Home = () => {
         </div>
         {/* News items */}
         <div className="space-y-6">
-          {isFetchingRssData &&
+          {
+            rssFeedData.length === 0 && isFetchingRssData &&
             <Box className="flex flex-row items-center justify-center">
               <CircularProgress className='text-gray-800' />
             </Box>
